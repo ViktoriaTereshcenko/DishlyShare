@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Opening Dishly...</title>
+  <meta name="description" content="Open a recipe in the Dishly app." />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #ffa07a, #ff6347);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2em;
+      margin-bottom: 0.5em;
+    }
+
+    p {
+      font-size: 1em;
+      margin-bottom: 1.5em;
+    }
+
+    .loader {
+      margin-top: 20px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #ffffff;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    #fallback {
+      display: none;
+    }
+
+    .button {
+      background-color: #ffffff;
+      color: #ff6347;
+      border: none;
+      padding: 0.75em 1.5em;
+      font-size: 1em;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .button:hover {
+      background-color: #ffe5e0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Opening your recipe in Dishly...</h1>
+  <div class="loader"></div>
+  <p id="info">Please wait a moment.</p>
+
+  <div id="fallback">
+    <p>If nothing happens, make sure you have the <strong>Dishly</strong> app installed.</p>
+  </div>
+
+  <script>
+  const params = new URLSearchParams(window.location.search);
+  const data = params.get("data");
+  const recipeId = params.get("recipe");
+
+  if (data) {
+    window.location.href = `dishly://import?data=${encodeURIComponent(data)}`;
+  } else if (recipeId) {
+    window.location.href = `dishly://recipe/${encodeURIComponent(recipeId)}`;
+  } else {
+    document.querySelector("h1").innerText = "Missing recipe data.";
+    document.querySelector(".loader").style.display = "none";
+    document.getElementById("fallback").style.display = "block";
+  }
+
+  setTimeout(() => {
+    document.querySelector(".loader").style.display = "none";
+    document.getElementById("fallback").style.display = "block";
+  }, 2000);
+</script>
+</body>
+</html>
